@@ -14,7 +14,8 @@
  * 4. Pass that city's config when calling `checkPermitStatus()`.
  */
 
-import { chromium, Browser, Page } from "playwright";
+import chromiumMin from "@sparticuz/chromium-min";
+import { chromium, Browser, Page } from "playwright-core";
 
 // ── Config type ───────────────────────────────────────────────────────────────
 
@@ -114,11 +115,17 @@ export interface ScrapeResult {
 
 let browser: Browser | null = null;
 
+// Remote chromium binary for Vercel/Lambda serverless environments
+const CHROMIUM_REMOTE_URL =
+  "https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar";
+
 async function getBrowser(): Promise<Browser> {
   if (!browser || !browser.isConnected()) {
+    const executablePath = await chromiumMin.executablePath(CHROMIUM_REMOTE_URL);
     browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: chromiumMin.args,
+      executablePath,
+      headless: chromiumMin.headless === true || chromiumMin.headless === "new" ? true : false,
     });
   }
   return browser;

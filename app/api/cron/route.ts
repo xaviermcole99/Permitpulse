@@ -93,7 +93,8 @@ export async function GET(req: NextRequest) {
     // Alert if changed
     if (newStatus !== oldStatus && newStatus !== "ERROR") {
       changed++;
-      const contractor = permit.contractor as { email: string; phone: string | null };
+      const contractorRaw = permit.contractor;
+      const contractor = (Array.isArray(contractorRaw) ? contractorRaw[0] : contractorRaw) as { email: string; phone: string | null };
 
       await sendAlert({
         contractorEmail: contractor.email,
