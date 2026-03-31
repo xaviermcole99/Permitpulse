@@ -19,6 +19,9 @@
     "stripe": "^14.21.0",
     "twilio": "^5.0.0"
   },
+  "overrides": {
+    "axios": "1.7.9"
+  },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
